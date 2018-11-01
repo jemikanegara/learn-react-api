@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import TodoDetail from "./TodoDetail";
-
+import Form from "./Form";
 class App extends Component {
   constructor() {
     super();
@@ -38,6 +38,8 @@ class App extends Component {
       })
       .then(res => console.log(res))
       .catch(err => console.log(err));
+
+    this.setState({ inputDescription: "" });
     this.getAllTodos();
   };
 
@@ -49,20 +51,17 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Hello Worldssz</h1>
-        <input
-          type="text"
-          name="inputDescription"
-          onChange={this.handleOnChange}
-          value={this.inputDescription}
+        <Form
+          handleOnChange={this.handleOnChange}
+          inputDescription={this.state.inputDescription}
+          submitTodo={this.submitTodo}
         />
-        <button onClick={() => this.submitTodo()}>submit</button>
 
         {this.state.todos.map((todo, index) => (
           <TodoDetail
             desc={todo.description}
             done={JSON.stringify(todo.done)}
             deleteTodo={this.deleteTodo}
-            onChange={this.onChange}
             key={index}
             index={index}
           />
