@@ -6,7 +6,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      todos: []
+      todos: [],
+      inputDescription: ""
     };
   }
 
@@ -29,6 +30,17 @@ class App extends Component {
     this.getAllTodos();
   };
 
+  submitTodo = async () => {
+    await axios
+      .post(`https://ib-api-todo-list.herokuapp.com/todos`, {
+        description: this.state.inputDescription,
+        done: false
+      })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+    this.getAllTodos();
+  };
+
   handleOnChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -37,6 +49,14 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Hello Worldssz</h1>
+        <input
+          type="text"
+          name="inputDescription"
+          onChange={this.handleOnChange}
+          value={this.inputDescription}
+        />
+        <button onClick={() => this.submitTodo()}>submit</button>
+
         {this.state.todos.map((todo, index) => (
           <TodoDetail
             desc={todo.description}
