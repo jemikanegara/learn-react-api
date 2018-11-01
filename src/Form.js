@@ -3,6 +3,7 @@ import React from "react";
 const Form = props => {
   return (
     <React.Fragment>
+      <span>Add :</span>
       <input
         type="text"
         name="inputDescription"

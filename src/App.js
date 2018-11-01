@@ -7,7 +7,9 @@ class App extends Component {
     super();
     this.state = {
       todos: [],
-      inputDescription: ""
+      inputDescription: "",
+      inputSearch: "",
+      filteredTodos: []
     };
   }
 
@@ -47,6 +49,22 @@ class App extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  handleSearch = async e => {
+    await this.handleOnChange(e);
+    axios
+      .get(
+        `https://ib-api-todo-list.herokuapp.com/todos/search?description=${
+          this.state.inputSearch
+        }`
+      )
+      .then(res =>
+        this.setState({
+          filteredTodos: res.data
+        })
+      )
+      .catch(err => console.log(err));
+  };
+
   render() {
     return (
       <div className="App">
@@ -56,16 +74,34 @@ class App extends Component {
           inputDescription={this.state.inputDescription}
           submitTodo={this.submitTodo}
         />
-
-        {this.state.todos.map((todo, index) => (
-          <TodoDetail
-            desc={todo.description}
-            done={JSON.stringify(todo.done)}
-            deleteTodo={this.deleteTodo}
-            key={index}
-            index={index}
-          />
-        ))}
+        <br />
+        Search:
+        <input
+          type="text"
+          name="inputSearch"
+          value={this.state.inputSearch}
+          onChange={this.handleSearch}
+        />
+        {this.state.inputSearch !== "" &&
+          this.state.filteredTodos.map((todo, index) => (
+            <TodoDetail
+              desc={todo.description}
+              done={JSON.stringify(todo.done)}
+              deleteTodo={this.deleteTodo}
+              key={index}
+              index={index}
+            />
+          ))}
+        {this.state.inputSearch === "" &&
+          this.state.todos.map((todo, index) => (
+            <TodoDetail
+              desc={todo.description}
+              done={JSON.stringify(todo.done)}
+              deleteTodo={this.deleteTodo}
+              key={index}
+              index={index}
+            />
+          ))}
       </div>
     );
   }
